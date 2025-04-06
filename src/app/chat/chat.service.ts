@@ -1,5 +1,10 @@
 import { Injectable,  signal } from '@angular/core';
 
+export interface ChatMessage {
+  text: string;
+  type: 'message';
+}
+
 @Injectable()
 export class ChatService {
   private socket?: WebSocket;
@@ -14,7 +19,8 @@ export class ChatService {
     };
 
     this.socket.onmessage = (event) => {
-      this.messages.update((prev) => [...prev, `[상대방] ${event.data}`]);
+      const data = JSON.parse(event.data) as ChatMessage;
+      this.messages.update((prev) => [...prev, `[상대방] ${data.text}`]);
     };
 
     this.socket.onclose = () => {
@@ -28,7 +34,11 @@ export class ChatService {
 
   send(message: string): void {
     if (this.socket?.readyState === WebSocket.OPEN) {
-      this.socket.send(message);
+      const payload: ChatMessage = {
+        text: message,
+        type: 'message'
+      };
+      this.socket.send(JSON.stringify(payload));
       this.messages.update((prev) => [...prev, `[나] ${message}`]);
     } else {
       console.warn('WebSocket이 아직 열리지 않았습니다.');
