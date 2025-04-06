@@ -1,8 +1,14 @@
-<h2>채팅</h2>
-<ul>
-    @for (message of chatService.messages(); track $index) {
-        <li>{{ message }}</li>
-    }
-</ul>
-<input [(ngModel)]="inputMessage" (keydown.enter)="sendMessage()" placeholder="메시지를 입력하세요" />
-<button (click)="sendMessage()">보내기</button>
+@if (chatService.connected()) {
+    <h2>채팅</h2>
+    <ul>
+        @for (message of chatService.messages(); track $index) {
+            <li>{{ message }}</li>
+        }
+    </ul>
+    <input [(ngModel)]="inputMessage" (keydown.enter)="sendMessage()" placeholder="메시지를 입력하세요" />
+    <button (click)="sendMessage()">보내기</button>
+} @else {
+    <h2>닉네임을 입력하세요</h2>
+    <input [(ngModel)]="inputNickname" placeholder="닉네임" />
+    <button (click)="start()">채팅 시작</button>
+}
