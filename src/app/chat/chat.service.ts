@@ -1,9 +1,15 @@
 import { Injectable,  signal } from '@angular/core';
 
+const enum ChatMessageType {
+  Join = "Join",
+  Leave = "Leave",
+  Message = "Message"
+}
+
 export interface ChatMessage {
   nickname: string;
   text: string;
-  type: 'message';
+  type: ChatMessageType;
 }
 
 @Injectable()
@@ -23,11 +29,32 @@ export class ChatService {
 
     this.socket.onopen = () => {
       this.connected.set(true);
+
+      const payload: ChatMessage = {
+        nickname,
+        text: `${nickname}님이 입장했습니다.`,
+        type: ChatMessageType.Join
+      }
+
+      this.socket?.send(JSON.stringify(payload))
     };
 
     this.socket.onmessage = (event) => {
       const message = JSON.parse(event.data) as ChatMessage;
-      this.messages.update((prev) => [...prev, `[${message.nickname}] ${message.text}`]);
+
+      switch (message.type) {
+        case ChatMessageType.Join:
+          this.messages.update((prev) => [...prev, `[System] ${message.text}`]);
+          break;
+        case ChatMessageType.Leave:
+          this.messages.update((prev) => [...prev, `[System] ${message.text}`]);
+          break;
+        case ChatMessageType.Message:
+          this.messages.update((prev) => [...prev, `[${message.nickname}] ${message.text}`]);
+          break;
+        default:
+          break;
+      }
     };
 
     this.socket.onclose = () => {
@@ -52,7 +79,7 @@ export class ChatService {
     const payload: ChatMessage = {
       nickname: this.nickname,
       text: message,
-      type: 'message'
+      type: ChatMessageType.Message
     };
 
     this.socket.send(JSON.stringify(payload));
