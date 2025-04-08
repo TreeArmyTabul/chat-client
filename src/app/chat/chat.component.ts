@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ChatService } from './chat.service';
 import { FormsModule } from '@angular/forms';
 
@@ -8,11 +8,14 @@ import { FormsModule } from '@angular/forms';
   selector: 'app-chat',
   templateUrl: './chat.component.html',
 })
-export class ChatComponent {
+export class ChatComponent implements OnInit {
   inputMessage: string = '';
-  inputNickname: string = '';
 
   constructor(public chatService: ChatService) {}
+
+  ngOnInit(): void {
+    this.chatService.connect();
+  }
 
   sendMessage(): void {
     const message = this.inputMessage.trim();
@@ -20,15 +23,6 @@ export class ChatComponent {
     if (message) {
       this.chatService.send(message);
       this.inputMessage = '';
-    }
-  }
-
-  start(): void {
-    const nickname = this.inputNickname.trim();
-
-    if (nickname) {
-      this.chatService.connect(nickname);
-      this.inputNickname = '';
     }
   }
 }

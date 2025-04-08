@@ -1,4 +1,4 @@
-@if (chatService.connected()) {
+@if (chatService.nickname().length > 0) {
     <h2>채팅</h2>
     <ul>
         @for (message of chatService.messages(); track $index) {
@@ -8,7 +8,5 @@
     <input [(ngModel)]="inputMessage" (keydown.enter)="sendMessage()" placeholder="메시지를 입력하세요" />
     <button (click)="sendMessage()">보내기</button>
 } @else {
-    <h2>닉네임을 입력하세요</h2>
-    <input [(ngModel)]="inputNickname" placeholder="닉네임" />
-    <button (click)="start()">채팅 시작</button>
+    <p>채팅 서버에 접속 중입니다...</p>
 }
