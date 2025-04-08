@@ -8,6 +8,7 @@ import { MessageComponent } from "./components/message.component";
   providers: [ChatService],
   selector: 'app-chat',
   templateUrl: './chat.component.html',
+  styleUrl: './chat.component.scss'
 })
 export class ChatComponent implements OnInit {
   inputMessage: string = '';

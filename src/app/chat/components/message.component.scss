@@ -1,0 +1,36 @@
+.system-message {
+    color: gray;
+    font-size: 12px;
+    text-align: center;
+    margin: 8px 0;
+}
+
+.message {
+    display: flex;
+    flex-direction: column;
+    margin: 8px;
+    align-items: flex-start;
+
+    &.self {
+        align-items: flex-end;
+
+        .bubble {
+            background-color: #ffe812;
+        }
+    }
+
+    .nickname {
+        font-size: 12px;
+        color: gray;
+        margin-bottom: 2px;
+    }
+
+    .bubble {
+        padding: 8px 12px;
+        border-radius: 18px;
+        max-width: 75%;
+        background-color: #e2e2e2;
+        font-size: 14px;
+        line-height: 1.4;
+    }
+}

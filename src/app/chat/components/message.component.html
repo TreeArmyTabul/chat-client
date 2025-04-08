@@ -1,1 +1,19 @@
-<li>{{ message() }}</li>
+@switch (message().type) {
+    @case ("Join") {
+        <li class="system-message">{{ message().text }}</li>
+    }
+    @case ("Leave") {
+        <li class="system-message">{{ message().text }}</li>
+    }
+    @case ("Message") {
+        <li class="message" [class.self]="isSelf()">
+            @if (!isSelf()) {
+                <div class="nickname">{{ message().nickname }}</div>
+            }
+            <div class="bubble">{{ message().text }}</div>
+        </li> 
+    }
+    @case ("Welcome") {
+        <li class="system-message">{{ message().text }}</li>
+    }
+}

@@ -18,7 +18,7 @@ export class ChatService {
   readonly nickname = signal<string>('');
   private socket?: WebSocket;
   
-  readonly messages = signal<string[]>([]);
+  readonly messages = signal<ChatMessage[]>([]);
 
   connect(): void {
     this.socket = new WebSocket('ws://localhost:5247/chat');
@@ -30,17 +30,17 @@ export class ChatService {
 
       switch (message.type) {
         case ChatMessageType.Join:
-          this.messages.update((prev) => [...prev, `[System] ${message.text}`]);
+          this.messages.update((prev) => [...prev, message]);
           break;
         case ChatMessageType.Leave:
-          this.messages.update((prev) => [...prev, `[System] ${message.text}`]);
+          this.messages.update((prev) => [...prev, message]);
           break;
         case ChatMessageType.Message:
-          this.messages.update((prev) => [...prev, `[${message.nickname}] ${message.text}`]);
+          this.messages.update((prev) => [...prev, message]);
           break;
         case ChatMessageType.Welcome:
           this.nickname.set(message.nickname);
-          this.messages.update((prev) => [...prev, `[System] ${message.text}`]);
+          this.messages.update((prev) => [...prev, message]);
           break;
         default:
           break;
@@ -69,6 +69,6 @@ export class ChatService {
     };
 
     this.socket.send(JSON.stringify(payload));
-    this.messages.update((prev) => [...prev, `[나] ${message}`]);
+    this.messages.update((prev) => [...prev, payload]);
   }
 }
