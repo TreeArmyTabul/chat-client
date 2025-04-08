@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ChatService } from './chat.service';
 import { FormsModule } from '@angular/forms';
+import { MessageComponent } from "./components/message.component";
 
 @Component({
-  imports: [FormsModule],
+  imports: [FormsModule, MessageComponent],
   providers: [ChatService],
   selector: 'app-chat',
   templateUrl: './chat.component.html',
