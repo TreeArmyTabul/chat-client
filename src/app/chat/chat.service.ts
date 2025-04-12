@@ -1,9 +1,11 @@
 import { Injectable,  signal } from '@angular/core';
 
 const enum ChatMessageType {
+  Gift = "Gift",
   Join = "Join",
   Leave = "Leave",
   Message = "Message",
+  System = "System",
   Welcome = "Welcome"
 }
 
@@ -29,20 +31,12 @@ export class ChatService {
       const message = JSON.parse(event.data) as ChatMessage;
 
       switch (message.type) {
-        case ChatMessageType.Join:
-          this.messages.update((prev) => [...prev, message]);
-          break;
-        case ChatMessageType.Leave:
-          this.messages.update((prev) => [...prev, message]);
-          break;
-        case ChatMessageType.Message:
-          this.messages.update((prev) => [...prev, message]);
-          break;
         case ChatMessageType.Welcome:
           this.nickname.set(message.nickname);
           this.messages.update((prev) => [...prev, message]);
           break;
         default:
+          this.messages.update((prev) => [...prev, message]);
           break;
       }
     };
@@ -68,7 +62,9 @@ export class ChatService {
       type: ChatMessageType.Message
     };
 
+    if (!message.startsWith("/gift")) {
+      this.messages.update((prev) => [...prev, payload]);
+    }
     this.socket.send(JSON.stringify(payload));
-    this.messages.update((prev) => [...prev, payload]);
   }
 }

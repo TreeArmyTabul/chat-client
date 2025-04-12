@@ -1,4 +1,9 @@
 @switch (message().type) {
+    @case ("Gift") {
+        <li class="gift-wrapper">
+            <div class="gift-message">{{ message().text }}</div>
+        </li>
+    }
     @case ("Join") {
         <li class="system-message">{{ message().text }}</li>
     }
@@ -12,6 +17,9 @@
             }
             <div class="bubble">{{ message().text }}</div>
         </li> 
+    }
+    @case ("System") {
+        <li class="system-message">{{ message().text }}</li>
     }
     @case ("Welcome") {
         <li class="system-message">{{ message().text }}</li>
