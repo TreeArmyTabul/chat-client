@@ -1,5 +1,5 @@
 import { Component, input } from '@angular/core';
-import { ChatMessage } from '../chat.service';
+import { ChatMessage, ChatMessageType } from '../chat.service';
 
 @Component({
   selector: 'chat-message',
@@ -9,4 +9,6 @@ import { ChatMessage } from '../chat.service';
 export class MessageComponent {
   isSelf = input.required<boolean>();
   message = input.required<ChatMessage>();
+
+  ChatMessageType = ChatMessageType;
 }

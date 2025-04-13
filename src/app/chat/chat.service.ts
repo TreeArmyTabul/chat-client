@@ -1,19 +1,19 @@
 import { Injectable,  signal } from '@angular/core';
 
-const enum ChatMessageType {
-  Gift = "Gift",
-  Join = "Join",
-  Leave = "Leave",
-  Message = "Message",
-  System = "System",
-  UserList = "UserList",
-  Welcome = "Welcome"
+export enum ChatMessageType {
+  Gift = 0,
+  Join,
+  Leave,
+  Message,
+  System,
+  UserList,
+  Welcome
 }
 
 export interface ChatMessage {
-  nickname: string;
-  text: string;
-  type: ChatMessageType;
+  Nickname: string;
+  Text: string;
+  Type: ChatMessageType;
 }
 
 @Injectable()
@@ -24,21 +24,21 @@ export class ChatService {
   readonly messages = signal<ChatMessage[]>([]);
   readonly userList = signal<string[]>([]);
 
-  connect(): void {
-    this.socket = new WebSocket('ws://localhost:5247/chat');
+  connect(token: string): void {
+    this.socket = new WebSocket(`ws://localhost:5247/chat?token=${token}`);
 
     this.socket.onopen = () => {};
 
     this.socket.onmessage = (event) => {
       const message = JSON.parse(event.data) as ChatMessage;
 
-      switch (message.type) {
+      switch (message.Type) {
         case ChatMessageType.UserList:
-          const nicknames = message.text.split(", ");
+          const nicknames = message.Text.split(", ");
           this.userList.set(nicknames);
           break;
         case ChatMessageType.Welcome:
-          this.nickname.set(message.nickname);
+          this.nickname.set(message.Nickname);
           this.messages.update((prev) => [...prev, message]);
           break;
         default:
@@ -63,9 +63,9 @@ export class ChatService {
     }
 
     const payload: ChatMessage = {
-      nickname: this.nickname(),
-      text: message,
-      type: ChatMessageType.Message
+      Nickname: this.nickname(),
+      Text: message,
+      Type: ChatMessageType.Message
     };
 
     if (!message.startsWith("/gift")) {

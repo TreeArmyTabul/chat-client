@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ChatService } from './chat.service';
 import { FormsModule } from '@angular/forms';
 import { MessageComponent } from "./components/message.component";
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   imports: [FormsModule, MessageComponent],
@@ -13,10 +14,12 @@ import { MessageComponent } from "./components/message.component";
 export class ChatComponent implements OnInit {
   inputMessage: string = '';
 
-  constructor(public chatService: ChatService) {}
+  constructor(private activatedRoute: ActivatedRoute, public chatService: ChatService) {}
 
   ngOnInit(): void {
-    this.chatService.connect();
+    const token = this.activatedRoute.snapshot.queryParams["token"]
+
+    this.chatService.connect(token);
   }
 
   sendMessage(): void {
