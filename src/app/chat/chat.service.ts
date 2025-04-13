@@ -6,6 +6,7 @@ const enum ChatMessageType {
   Leave = "Leave",
   Message = "Message",
   System = "System",
+  UserList = "UserList",
   Welcome = "Welcome"
 }
 
@@ -21,6 +22,7 @@ export class ChatService {
   private socket?: WebSocket;
   
   readonly messages = signal<ChatMessage[]>([]);
+  readonly userList = signal<string[]>([]);
 
   connect(): void {
     this.socket = new WebSocket('ws://localhost:5247/chat');
@@ -31,6 +33,10 @@ export class ChatService {
       const message = JSON.parse(event.data) as ChatMessage;
 
       switch (message.type) {
+        case ChatMessageType.UserList:
+          const nicknames = message.text.split(", ");
+          this.userList.set(nicknames);
+          break;
         case ChatMessageType.Welcome:
           this.nickname.set(message.nickname);
           this.messages.update((prev) => [...prev, message]);
