@@ -68,7 +68,7 @@ export class ChatService {
       Type: ChatMessageType.Message
     };
 
-    if (!message.startsWith("/gift")) {
+    if (!message.startsWith("/")) {
       this.messages.update((prev) => [...prev, payload]);
     }
     this.socket.send(JSON.stringify(payload));
